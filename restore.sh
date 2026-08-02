@@ -35,6 +35,35 @@ else
     echo "✅ Open-SEO MCP ya presente en el sistema."
 fi
 
+# 4. Instalar Claude-Mem (Memoria Persistente para Antigravity)
+# Documentación: plugins/claude-mem/README.md
+echo ""
+echo "🧠 Instalando Claude-Mem (Memoria Persistente)..."
+if command -v claude-mem &> /dev/null; then
+    echo "✅ Claude-Mem ya instalado: $(claude-mem --version 2>&1)"
+else
+    # El flag --legacy-peer-deps resuelve un conflicto benigno de tree-sitter-lua
+    npm install -g claude-mem --legacy-peer-deps
+    echo "✅ Claude-Mem instalado: $(claude-mem --version 2>&1)"
+fi
+
+echo "🔧 Configurando hooks de Claude-Mem para Antigravity..."
+claude-mem install --ide antigravity
+
+echo "🔄 Arrancando worker de Claude-Mem en background..."
+claude-mem start &
+sleep 2
+
+if claude-mem status 2>&1 | grep -q "Worker is running"; then
+    echo "✅ Worker de Claude-Mem activo (PID detectado, puerto 37701)"
+else
+    echo "⚠️  Worker de Claude-Mem no detectado activo. Ejecuta manualmente: claude-mem start"
+fi
+
 echo ""
 echo "🎉 ¡RESTAURACIÓN DE INFRAESTRUCTURA COMPLETADA CON ÉXITO!"
-echo "📌 Copia tus credenciales en el archivo .env para reactivar todos los servicios."
+echo ""
+echo "📌 Próximos pasos:"
+echo "   1. Copia tus credenciales en el archivo .env para reactivar todos los servicios."
+echo "   2. Reinicia Antigravity CLI (agy) para cargar los hooks de Claude-Mem."
+echo "   3. La memoria se captura automáticamente desde la primera sesión."
