@@ -16,7 +16,10 @@ curl -sSL https://raw.githubusercontent.com/MichelRojo/antigravity-stack-config/
 
 ## 🛠️ Componentes Incluidos en el Stack
 
-### 1. Servidores MCP (Model Context Protocol)
+### 1. Memoria Persistente & Continuidad (`claude-mem`)
+- 🧠 **`claude-mem` (thedotmack/claude-mem):** Captura automática de acciones del agente, compresión semántica con IA e inyección transparente de contexto en futuras sesiones de Antigravity (`npx claude-mem install --ide antigravity`).
+
+### 2. Servidores MCP (Model Context Protocol)
 - **`open-seo`:** Alternativa a Semrush/Ahrefs (DataForSEO API, Keywords, Backlinks, LLM Mentions).
 - **`chrome-devtools-mcp`:** Navegación autónoma, capturas, inspección DOM y auditorías Lighthouse.
 - **`n8n-mcp`:** Creación, validación y gestión de flujos n8n.
@@ -25,7 +28,7 @@ curl -sSL https://raw.githubusercontent.com/MichelRojo/antigravity-stack-config/
 - **`ssh-server`:** Conexión y ejecución en servidores VPS remotos.
 - **`headroom` & `gmp-code-assist`**.
 
-### 2. Plugins & Skills Globales (`~/.gemini/config/skills/` & `~/.gemini/config/plugins/`)
+### 3. Plugins & Skills Globales (`~/.gemini/config/skills/` & `~/.gemini/config/plugins/`)
 - ⭐ **`ponytail` (ACTIVADA POR DEFECTO):** Regla del "Laziest Senior Dev in the Room" (`DietrichGebert/ponytail`). Escalera de simplicidad de 7 pasos (YAGNI, reutilización, HTML5/stdlib nativo, cero dependencias infladas, ~54-94% menos líneas de código).
 - **`custom-automation-skills`:** Botpress Cloud, n8n, Meta Ads, GA4, WordPress, Google Ads.
 - **`chrome-devtools-plugin`:** A11y, LCP, Memory Leaks, Browser Troubleshooting.
@@ -33,7 +36,7 @@ curl -sSL https://raw.githubusercontent.com/MichelRojo/antigravity-stack-config/
 - **`modern-web-guidance-plugin`:** Guías de desarrollo web moderno y extensiones Chrome.
 - **`superpowers`:** TDD, Debugging sistemático, Git Worktrees, Subagentes.
 
-### 3. Integraciones de Marketing & CRM
+### 4. Integraciones de Marketing & CRM
 - **Twenty CRM:** `https://crm.madridrenueva.es`
 - **Mautic Marketing Automation:** `http://localhost:8081` (Túnel SSH / VPS) & `https://madridrenueva.es/mtc.js`
 
