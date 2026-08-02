@@ -25,7 +25,8 @@ curl -sSL https://raw.githubusercontent.com/MichelRojo/antigravity-stack-config/
 - **`ssh-server`:** Conexión y ejecución en servidores VPS remotos.
 - **`headroom` & `gmp-code-assist`**.
 
-### 2. Plugins de Automatización Especializada (`~/.gemini/config/plugins/`)
+### 2. Plugins & Skills Globales (`~/.gemini/config/skills/` & `~/.gemini/config/plugins/`)
+- ⭐ **`ponytail` (ACTIVADA POR DEFECTO):** Regla del "Laziest Senior Dev in the Room" (`DietrichGebert/ponytail`). Escalera de simplicidad de 7 pasos (YAGNI, reutilización, HTML5/stdlib nativo, cero dependencias infladas, ~54-94% menos líneas de código).
 - **`custom-automation-skills`:** Botpress Cloud, n8n, Meta Ads, GA4, WordPress, Google Ads.
 - **`chrome-devtools-plugin`:** A11y, LCP, Memory Leaks, Browser Troubleshooting.
 - **`data-agent-kit-plugin`:** BigQuery, dbt, Dataform, GCP Data Pipelines.
