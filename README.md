@@ -37,6 +37,7 @@ curl -sSL https://raw.githubusercontent.com/MichelRojo/antigravity-stack-config/
 
 | MCP Server | Función |
 |---|---|
+| `apify` | Extracción de datos web a gran escala, scraping sin bloqueos, crawling para RAG/IA y acceso a Apify Store (`https://mcp.apify.com`) |
 | `open-seo` | Alternativa a Semrush/Ahrefs (DataForSEO API, Keywords, Backlinks, LLM Mentions) |
 | `chrome-devtools-mcp` | Navegación autónoma, capturas, inspección DOM y auditorías Lighthouse |
 | `n8n-mcp` | Creación, validación y gestión de flujos n8n |
@@ -83,6 +84,7 @@ cp .env.example .env
 ```
 
 Variables requeridas:
+- `APIFY_TOKEN` (Requerido para Apify MCP server `mcp.apify.com`)
 - `DATAFORSEO_LOGIN` & `DATAFORSEO_PASSWORD` & `DATAFORSEO_API_KEY`
 - `N8N_API_URL` & `N8N_API_KEY`
 - `WP_USER` & `WP_APP_PASSWORD`
@@ -99,6 +101,8 @@ antigravity-stack-config/
 ├── README.md              # Este archivo — fuente de verdad
 ├── restore.sh             # Script de restauración en 1-clic
 ├── .env.example           # Plantilla de credenciales
+├── docs/
+│   └── APIFY_MCP.md       # Guía detallada de integración de Apify MCP
 └── plugins/
     └── claude-mem/
         └── README.md      # Documentación de Claude-Mem (hooks, worker, comandos)
@@ -110,6 +114,7 @@ antigravity-stack-config/
 
 | Fecha | Cambio |
 |---|---|
+| 2026-08-07 | Integración global de Apify MCP server (`mcp.apify.com`) con transporte Streamable HTTP e inferencia de esquemas |
 | 2026-08-02 | Creación inicial del repositorio con Open-SEO MCP y stack base |
 | 2026-08-02 | Instalación y documentación de `ponytail` skill (global, activa por defecto) |
 | 2026-08-02 | Instalación y documentación de `claude-mem v13.12.4` con 7 hooks y worker activo |
