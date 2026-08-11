@@ -1,0 +1,50 @@
+# Manifest: MCPs, skills & plugins to replicate for GitHub Copilot
+mcp_servers:
+  - name: apify
+    serverUrl: https://mcp.apify.com
+    note: "See docs/APIFY_MCP.md — requires APIFY_TOKEN in .env"
+  - name: open-seo
+    serverUrl: "<configure your open-seo endpoint or DataForSEO creds>"
+  - name: chrome-devtools-mcp
+    serverUrl: "<chrome-devtools-mcp endpoint>"
+  - name: n8n-mcp
+    serverUrl: "<n8n-mcp endpoint>"
+  - name: github-mcp-server
+    serverUrl: "<github-mcp-server endpoint>"
+  - name: cloudrun
+    serverUrl: "<cloudrun endpoint>"
+  - name: ssh-server
+    serverUrl: "<ssh-server endpoint>"
+  - name: headroom
+    serverUrl: "<headroom endpoint>"
+  - name: gmp-code-assist
+    serverUrl: "<gmp-code-assist endpoint>"
+  - name: claude-mem
+    serverUrl: "(plugin) claude-mem — see plugins/claude-mem/README.md"
+
+skills:
+  - name: ponytail
+    source: repo
+    path: skills/ponytail/SKILL.md
+    default_active: true
+  - name: superpowers
+    source: "~/.gemini/config/skills or external"
+  - name: custom-automation-skills
+    source: "~/.gemini/config/skills or external"
+  - name: chrome-devtools-plugin
+    source: "~/.gemini/config/plugins or external"
+  - name: data-agent-kit-plugin
+    source: "~/.gemini/config/plugins or external"
+  - name: modern-web-guidance-plugin
+    source: "~/.gemini/config/plugins or external"
+
+plugins:
+  - name: claude-mem
+    version: 13.12.4
+    url: https://github.com/thedotmack/claude-mem
+    install_notes: "npm install -g claude-mem --legacy-peer-deps; claude-mem install --ide copilot|antigravity; claude-mem start"
+
+notes:
+  - Copy .env.example to .env and fill credentials before running the restore script.
+  - Review each MCP server for tokens and endpoints; do not commit secrets.
+  - This manifest is a reproducible checklist — the included script applies the supported installs.
