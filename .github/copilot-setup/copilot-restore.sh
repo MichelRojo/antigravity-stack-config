@@ -50,4 +50,32 @@ JSON
 
 echo "Se escribió ~/.gemini/config/mcp_config.example.json. Mueve/mezcla con tu mcp_config.json y añade tokens en .env"
 
+# Optional: apply a prepared config artifact (zip) that contains mcp_config.json and .env
+if [ "${1-}" = "--apply-artifact" ] && [ -f "${2-}" ]; then
+  ARTIFACT="$2"
+  echo "Aplicando artifact de configuración: $ARTIFACT"
+  TMP_DIR=$(mktemp -d)
+  unzip -q "$ARTIFACT" -d "$TMP_DIR" || { echo "Fallo al descomprimir $ARTIFACT"; rm -rf "$TMP_DIR"; exit 1; }
+
+  # Apply .env if present (copy to repo root .env, but do NOT commit)
+  if [ -f "$TMP_DIR/.env" ]; then
+    cp "$TMP_DIR/.env" ./ .env
+    echo "Se copió .env desde el artifact a ./ .env (no comiteado). Edita si es necesario."
+  fi
+
+  # Copy generated mcp configs into ~/.gemini/config and ~/.gemini/antigravity
+  mkdir -p "$HOME/.gemini/config" "$HOME/.gemini/antigravity"
+  if [ -f "$TMP_DIR/mcp_config.json" ]; then
+    cp "$TMP_DIR/mcp_config.json" "$HOME/.gemini/config/mcp_config.json"
+    echo "Instalado ~/.gemini/config/mcp_config.json"
+  fi
+  if [ -f "$TMP_DIR/antigravity_mcp_config.json" ]; then
+    cp "$TMP_DIR/antigravity_mcp_config.json" "$HOME/.gemini/antigravity/mcp_config.json"
+    echo "Instalado ~/.gemini/antigravity/mcp_config.json"
+  fi
+
+  rm -rf "$TMP_DIR"
+  echo "Aplicación del artifact completada. Revisa ~/.gemini y reinicia Copilot/Antigravity si es necesario."
+fi
+
 echo "Restauración local completada (pasos manuales: editar .env, revisar mcp_config.json y reiniciar Copilot/Antigravity)."
