@@ -1,0 +1,101 @@
+name: Generate Copilot Config Artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Optional target environment name'
+        required: false
+
+jobs:
+  build-config:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+      id-token: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create config files from Secrets
+        env:
+          STITCH_API_KEY: ${{ secrets.STITCH_API_KEY }}
+          SSH_SERVER_PASSWORD: ${{ secrets.SSH_SERVER_PASSWORD }}
+          ROYAL_MCP_API_KEY: ${{ secrets.ROYAL_MCP_API_KEY }}
+          GOOGLE_OAUTH_CLIENT_JSON: ${{ secrets.GOOGLE_OAUTH_CLIENT_JSON }}
+          GA4_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+          N8N_API_URL: ${{ secrets.N8N_API_URL }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          GITHUB_PERSONAL_ACCESS_TOKEN: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
+          DATAFORSEO_API_KEY: ${{ secrets.DATAFORSEO_API_KEY }}
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+          BOTPRESS_TOKEN: ${{ secrets.BOTPRESS_TOKEN }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p out
+
+          # Write .env with available secrets (do NOT commit)
+          cat > out/.env <<EOF
+          # Generated .env (do not commit)
+          N8N_API_URL="${N8N_API_URL:-}"
+          N8N_API_KEY="${N8N_API_KEY:-}"
+          APIFY_TOKEN="${APIFY_TOKEN:-}"
+          DATAFORSEO_API_KEY="${DATAFORSEO_API_KEY:-}"
+          WP_APP_PASSWORD="${WP_APP_PASSWORD:-}"
+          BOTPRESS_TOKEN="${BOTPRESS_TOKEN:-}"
+          YOUTUBE_REFRESH_TOKEN="${YOUTUBE_REFRESH_TOKEN:-}"
+          GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-}"
+          EOF
+
+          # Build mcp_config.json using available secrets
+          cat > out/mcp_config.json <<EOF
+          {
+            "mcpServers": {
+              "apify": {
+                "serverUrl": "https://mcp.apify.com",
+                "headers": { "Authorization": "Bearer ${APIFY_TOKEN:-}" }
+              },
+              "n8n-mcp": {
+                "command": "npx",
+                "args": ["-y","n8n-mcp"],
+                "env": { "N8N_API_KEY": "${N8N_API_KEY:-}", "N8N_API_URL": "${N8N_API_URL:-}" }
+              },
+              "royal-mcp": {
+                "command": "npx",
+                "args": ["-y","mcp-remote","https://madridrenueva.es/wp-json/royal-mcp/v1/mcp","--header","X-Royal-MCP-API-Key:${ROYAL_MCP_API_KEY:-}"]
+              },
+              "github-mcp-server": {
+                "command": "docker",
+                "args": ["run","-i","--rm","-e","GITHUB_PERSONAL_ACCESS_TOKEN","ghcr.io/github/github-mcp-server"],
+                "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN:-}" }
+              }
+            }
+          }
+          EOF
+
+          # Build antigravity-specific mcp config
+          cat > out/antigravity_mcp_config.json <<EOF
+          {
+            "mcpServers": {
+              "apify": { "serverUrl": "https://mcp.apify.com", "headers": { "Authorization": "Bearer ${APIFY_TOKEN:-}" } },
+              "twenty": { "serverUrl": "https://crm.madridrenueva.es/mcp", "headers": { "Authorization": "Bearer ${STITCH_API_KEY:-}" } }
+            }
+          }
+          EOF
+
+      - name: Package artifact
+        run: |
+          cd out && zip -r ../copilot-config.zip . && cd ..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: copilot-config
+          path: copilot-config.zip
+
+      - name: Cleanup
+        run: rm -f copilot-config.zip || true
